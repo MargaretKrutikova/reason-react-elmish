@@ -6,7 +6,13 @@ The library attempts to implement the "model-update" part of the "model-view-upd
 
 ## Installation
 
-Not published as `npm` yet, can be installed from `redex` by adding to bsconfig.json:
+Can be installed via:
+
+```sh
+npm install "https://github.com/MargaretKrutikova/reason-react-elmish"
+```
+
+and added to bsconfig.json:
 
 ```sh
 "bs-dependencies": [
