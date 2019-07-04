@@ -5,14 +5,8 @@ let make = () => {
 
   <div>
     <button
-      onClick={_event => {
-        dispatch(Click());
-        dispatch(Click());
-      }}>
+      onClick={_event =>  dispatch(Click) }>
       {ReasonReact.string("Click")}
-    </button>
-    <button onClick={_event => dispatch(SetName("Random"))}>
-      {ReasonReact.string("Test rerender")}
     </button>
     <div>
       {switch (result) {

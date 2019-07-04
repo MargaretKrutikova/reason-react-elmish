@@ -1,36 +1,33 @@
 module Config = {
   type message =
-    | Click(unit)
-    | Success(unit)
-    | Error(unit)
-    | SetName(string);
+    | Click
+    | Success
+    | Error;
 
   type model = {
     count: int,
-    name: string,
     result: option(bool),
   };
 
-  let makeApiCall = ((), dispatch: message => unit) => {
+  let makeApiCall = dispatch => {
     let test = Js.Math.random_int(0, 2);
     if (test == 1) {
-      dispatch(Success());
+      dispatch(Success);
     } else {
-      dispatch(Error());
+      dispatch(Error);
     };
     None;
   };
 
   let update = (model, message) => {
     switch (message) {
-    | Click () => ({...model, count: model.count + 1}, Some(makeApiCall()))
-    | Success () => ({...model, result: Some(true)}, None)
-    | Error () => ({...model, result: Some(false)}, None)
-    | SetName(name) => ({...model, name}, None)
+    | Click => ({...model, count: model.count + 1}, Some(makeApiCall))
+    | Success => ({...model, result: Some(true)}, None)
+    | Error => ({...model, result: Some(false)}, None)
     };
   };
 
-  let initialState = ({count: 0, result: None, name: ""}, None);
+  let initialState = ({count: 0, result: None}, None);
 };
 
 include Elmish.Make({
