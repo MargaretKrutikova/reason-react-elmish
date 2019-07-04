@@ -1,0 +1,50 @@
+{
+  "name": "reason-react-elmish",
+  "version": "0.1.0",
+  "description": "Elmish architecture for reason-react",
+  "main": "src/Elmish.re",
+  "author": "Margarita Krutikova <margaretkru@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel examples/index.html",
+    "prestart": "npm run clean:bs && npm run build:bs",
+    "watch:bs": "bsb -make-world -w",
+    "build": "parcel build examples/index.html",
+    "prebuild": "npm run clean && npm run build:bs",
+    "build:bs": "bsb -make-world",
+    "clean": "npm run clean:bs && npm run clean:dist",
+    "clean:bs": "bsb -clean-world",
+    "clean:dist": "rm -rf dist",
+    "test": "exit 0"
+  },
+  "homepage": "https://github.com/MargaretKrutikova/reason-react-elmish",
+  "bugs": "https://github.com/MargaretKrutikova/reason-react-elmish/issues",
+  "keywords": [
+    "react",
+    "reason",
+    "reason-react",
+    "buckleScript",
+    "elmish"
+  ],
+  "files": [
+    "src",
+    "bsconfig.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MargaretKrutikova/reason-react-elmish.git"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "bs-platform": "^5.0.6",
+    "reason-react": "^0.7.0"
+  },
+  "devDependencies": {
+    "react": "16.8.6",
+    "bs-platform": "5.0.6",
+    "reason-react": "0.7.0"
+  },
+  "dependencies": {
+    "reductive": "^1.0.0"
+  }
+}
