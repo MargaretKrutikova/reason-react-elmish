@@ -40,9 +40,10 @@
     "reason-react": "^0.7.0"
   },
   "devDependencies": {
-    "react": "16.8.6",
-    "bs-platform": "5.0.6",
-    "reason-react": "0.7.0"
+    "react": "^16.8.6",
+    "bs-platform": "^5.0.6",
+    "reason-react": "^0.7.0",
+    "parcel-bundler": "^1.12.3"
   },
   "dependencies": {
     "reductive": "^1.0.0"
