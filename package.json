@@ -24,6 +24,7 @@
     "reason",
     "reason-react",
     "buckleScript",
+    "ui",
     "elmish"
   ],
   "files": [
