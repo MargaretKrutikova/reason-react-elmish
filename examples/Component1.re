@@ -4,8 +4,7 @@ let make = () => {
   let result = AppStore.useSelector(model => model.result);
 
   <div>
-    <button
-      onClick={_event =>  dispatch(Click) }>
+    <button onClick={_event => dispatch(Click)}>
       {ReasonReact.string("Click")}
     </button>
     <div>

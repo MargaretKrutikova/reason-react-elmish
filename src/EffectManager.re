@@ -7,7 +7,7 @@ type t = {
 let create = () => {listeners: ref([]), effects: ref([||])};
 
 let unsubscribe = (manager, listener, ()) =>
-  manager.listeners := List.filter(l => listener !== l, manager.listeners^);
+  manager.listeners := Belt.List.keep(manager.listeners^, l => listener !== l);
 
 let subscribe = (manager, listener) => {
   manager.listeners := [listener, ...manager.listeners^];
@@ -16,7 +16,7 @@ let subscribe = (manager, listener) => {
 
 let queueEffect = (manager, effect) => {
   manager.effects := Belt.Array.concat(manager.effects^, [|effect|]);
-  List.iter(listener => listener(), manager.listeners^);
+  Belt.List.forEach(manager.listeners^, listener => listener());
 };
 
 let runEffects = manager => {

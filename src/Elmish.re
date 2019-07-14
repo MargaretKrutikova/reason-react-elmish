@@ -39,7 +39,7 @@ module Make = (Config: Config) => {
     | Some(enhancer) => enhancer @@ Store.create
     };
 
-  let store =
+  let modelStore =
     storeCreator(
       ~reducer=(state, _) => state,
       ~preloadedState=initModel,
@@ -51,7 +51,7 @@ module Make = (Config: Config) => {
     switch (effect) {
     | Some(effectToRun) =>
       EffectManager.queueEffect(effectManager, () =>
-        effectToRun(Store.dispatch(store))
+        effectToRun(Store.dispatch(modelStore))
       )
     | None => ()
     };
@@ -59,16 +59,14 @@ module Make = (Config: Config) => {
     newModel;
   };
 
-  Store.replaceReducer(store, customReducer);
+  Store.replaceReducer(modelStore, customReducer);
 
-  module StoreContext = {
-    type t = Store.t(message, model);
+  include ReductiveContext.Make({
+    type state = Config.model;
+    type action = Config.message;
 
-    include Context.Make({
-      type context = t;
-      let defaultValue = store;
-    });
-  };
+    let store = modelStore;
+  });
 
   let useRunEffects = () => {
     let (updater, forceUpdate) = React.useReducer((s, _) => s + 1, 0);
@@ -99,41 +97,7 @@ module Make = (Config: Config) => {
   module ElmishProvider = {
     [@react.component]
     let make = (~children) => {
-      <StoreContext.Provider value=store>
-        <EffectRunner> children </EffectRunner>
-      </StoreContext.Provider>;
+      <Provider> <EffectRunner> children </EffectRunner> </Provider>;
     };
-  };
-
-  let useSelector = selector => {
-    let storeFromContext = React.useContext(StoreContext.context);
-    let (_, forceUpdate) = React.useReducer((s, _) => s + 1, 0);
-
-    let latestSelectedModel = React.useRef(selector(Store.getState(store)));
-
-    React.useLayoutEffect1(
-      () => {
-        let checkForUpdates = () => {
-          let newSelectedState = selector(Store.getState(store));
-
-          let hasStateChanged =
-            newSelectedState !== React.Ref.current(latestSelectedModel);
-
-          if (hasStateChanged) {
-            React.Ref.setCurrent(latestSelectedModel, newSelectedState);
-            forceUpdate();
-          };
-        };
-        Some(Store.subscribe(storeFromContext, checkForUpdates));
-      },
-      [|storeFromContext|],
-    );
-
-    React.Ref.current(latestSelectedModel);
-  };
-
-  let useDispatch = () => {
-    let storeFromContext = React.useContext(StoreContext.context);
-    Store.dispatch(storeFromContext);
   };
 };
