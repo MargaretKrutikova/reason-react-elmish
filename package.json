@@ -15,7 +15,7 @@
     "clean": "npm run clean:bs && npm run clean:dist",
     "clean:bs": "bsb -clean-world",
     "clean:dist": "rm -rf dist",
-    "test": "exit 0"
+    "test": "npm run build && jest"
   },
   "homepage": "https://github.com/MargaretKrutikova/reason-react-elmish",
   "bugs": "https://github.com/MargaretKrutikova/reason-react-elmish/issues",
@@ -40,12 +40,13 @@
     "reason-react": "^0.7.0"
   },
   "devDependencies": {
-    "react": "^16.8.6",
+    "@glennsl/bs-jest": "^0.4.8",
     "bs-platform": "^5.0.6",
-    "reason-react": "^0.7.0",
-    "parcel-bundler": "^1.12.3"
+    "parcel-bundler": "^1.12.3",
+    "react": "^16.8.6",
+    "reason-react": "^0.7.0"
   },
   "dependencies": {
-    "reductive": "^1.0.0"
+    "reductive": "github:margaretkrutikova/reductive#hooks"
   }
 }

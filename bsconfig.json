@@ -17,10 +17,12 @@
   ],
   "package-specs": [
     {
-      "module": "es6",
+      "module": "commonjs",
       "in-source": true
     }
   ],
   "bs-dependencies": ["reason-react", "reductive"],
+  "bs-dev-dependencies": ["@glennsl/bs-jest"],
+  "namespace": true,
   "suffix": ".bs.js"
 }
