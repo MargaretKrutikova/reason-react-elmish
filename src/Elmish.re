@@ -61,6 +61,11 @@ module Make = (Config: Config) => {
 
   Store.replaceReducer(modelStore, customReducer);
 
+  switch (initEffect) {
+  | Some(effect) => effect(Store.dispatch(modelStore))
+  | None => None
+  };
+
   include ReductiveContext.Make({
     type state = Config.model;
     type action = Config.message;
