@@ -1,7 +1,9 @@
+let selector = (model: AppStore.model) => model.result;
+
 [@react.component]
 let make = () => {
   let dispatch = AppStore.useDispatch();
-  let result = AppStore.useSelector(model => model.result);
+  let result = AppStore.useSelector(selector);
 
   <div>
     <button onClick={_event => dispatch(Click)}>

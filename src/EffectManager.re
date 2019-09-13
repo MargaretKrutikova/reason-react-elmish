@@ -6,6 +6,8 @@ type t = {
 };
 let create = () => {listeners: ref([]), effects: ref([||])};
 
+let getEffects = manager => manager.effects^;
+
 let unsubscribe = (manager, listener, ()) =>
   manager.listeners := Belt.List.keep(manager.listeners^, l => listener !== l);
 

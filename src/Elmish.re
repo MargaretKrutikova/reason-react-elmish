@@ -74,11 +74,17 @@ module Make = (Config: Config) => {
   });
 
   let useRunEffects = () => {
-    let (updater, forceUpdate) = React.useReducer((s, _) => s + 1, 0);
+    open Subscription;
 
-    React.useLayoutEffect0(() =>
-      Some(EffectManager.subscribe(effectManager, forceUpdate))
-    );
+    let source =
+      React.useMemo0(() =>
+        {
+          subscribe: EffectManager.subscribe(effectManager),
+          getCurrentValue: () => EffectManager.getEffects(effectManager),
+        }
+      );
+
+    let effects = useSubscription(source);
 
     React.useEffect1(
       () => {
@@ -87,7 +93,7 @@ module Make = (Config: Config) => {
           ? Some(() => Belt.Array.forEach(cleanupFuncs, func => func()))
           : None;
       },
-      [|updater|],
+      [|effects|],
     );
   };
 
