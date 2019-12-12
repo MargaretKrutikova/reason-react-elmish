@@ -36,12 +36,12 @@
   },
   "peerDependencies": {
     "react": "^16.8.6",
-    "bs-platform": "^5.0.6",
+    "bs-platform": "^5.0.6 || ^7.0.1",
     "reason-react": "^0.7.0"
   },
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.8",
-    "bs-platform": "^5.0.6",
+    "bs-platform": "^7.0.1",
     "parcel-bundler": "^1.12.4",
     "react": "^16.8.6",
     "reason-react": "^0.7.0"
