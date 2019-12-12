@@ -27,14 +27,17 @@ module type Config = {
 
 module Make = (Config: Config) => {
   open Reductive;
-  include Config;
+  include ReductiveContext.Make({
+    type state = Config.model;
+    type action = Config.message;
+  });
 
   let effectManager = EffectManager.create();
 
-  let (initModel, initEffect) = initialState;
+  let (initModel, initEffect) = Config.initialState;
 
   let storeCreator =
-    switch (storeEnhancer) {
+    switch (Config.storeEnhancer) {
     | None => Store.create
     | Some(enhancer) => enhancer @@ Store.create
     };
@@ -47,7 +50,7 @@ module Make = (Config: Config) => {
     );
 
   let customReducer = (model, message) => {
-    let (newModel, effect) = update(model, message);
+    let (newModel, effect) = Config.update(model, message);
     switch (effect) {
     | Some(effectToRun) =>
       EffectManager.queueEffect(effectManager, () =>
@@ -65,13 +68,6 @@ module Make = (Config: Config) => {
   | Some(effect) => effect(Store.dispatch(modelStore))
   | None => None
   };
-
-  include ReductiveContext.Make({
-    type state = Config.model;
-    type action = Config.message;
-
-    let store = modelStore;
-  });
 
   let useRunEffects = () => {
     open Subscription;
@@ -108,7 +104,9 @@ module Make = (Config: Config) => {
   module ElmishProvider = {
     [@react.component]
     let make = (~children) => {
-      <Provider> <EffectRunner> children </EffectRunner> </Provider>;
+      <Provider store=modelStore>
+        <EffectRunner> children </EffectRunner>
+      </Provider>;
     };
   };
 };
