@@ -25,53 +25,59 @@ Peer dependencies are `react`, `reason-react` and `bs-platform`.
 ## Example usage
 
 First, define your types for message and model, implement the update function and effectful functions (if any).
-Setup your elmish store with all of the above and your initial state with initial effect (if any).
+
+```reason
+// AppModel.re
+type message =
+  | FetchUsersRequest
+  | FetchUsersSuccess(userApiResponse)
+  | FetchUsersError;
+
+type data =
+  | NotAsked
+  | Loading
+  | Error
+  | Success(userApiResponse);
+
+type model = {data};
+
+let fetchUsers = dispatch => {
+  Js.Promise.(
+    Caller.fetchUsers()
+    |> then_(response => dispatch(FetchUsersSuccess(response)) |> resolve)
+    |> catch(_ => dispatch(FetchUsersError) |> resolve)
+  )
+  |> ignore;
+  None;
+};
+
+let update = (_, message) => {
+  switch (message) {
+  | FetchUsersRequest => ({data: Loading}, Some(fetchUsers))
+  | FetchUsersSuccess(data) => ({data: Success(data)}, None)
+  | FetchUsersError => ({data: Error}, None)
+  };
+};
+
+let initModel = ({data: NotAsked}, None);
+```
+
+Setup your elmish store with all of the above and your initial model with initial effect (if any).
 
 ```reason
 // AppStore.re
-module Config = {
-  type message =
-    | Click
-    | Success
-    | Error;
-
-  type model = {
-    count: int,
-    result: option(bool),
-  };
-
-  let makeApiCall = dispatch => {
-    let test = Js.Math.random_int(0, 2);
-    if (test == 1) {
-      dispatch(Success);
-    } else {
-      dispatch(Error);
-    };
-    None;
-  };
-
-  let update = (model, message) => {
-    switch (message) {
-    | Click => ({...model, count: model.count + 1}, Some(makeApiCall))
-    | Success => ({...model, result: Some(true)}, None)
-    | Error => ({...model, result: Some(false)}, None)
-    };
-  };
-
-  let initialState = ({count: 0, result: None}, None);
-};
-
 include Elmish.Make({
-  type model = Config.model;
-  type message = Config.message;
+  type model = AppModel.model;
+  type message = AppModel.message;
 
-  let update = Config.update;
+  let update = AppModel.update;
   let storeEnhancer = None;
-  let initialState = Config.initialState;
+  let initialModel = AppModel.initModel;
 });
+
 ```
 
-See example file [`./examples/AppStore.re`](./examples/AppStore.re).
+See example file [`./examples/AppModel.re`](./examples/AppModel.re) and [`./examples/AppStore.re`](./examples/AppStore.re).
 
 Then hook in your store into the react component tree somewhere at the root:
 
@@ -86,7 +92,7 @@ ReactDOMRe.renderToElementWithId(
 and use the hooks to get access to the model and dispatch in your components:
 
 ```reason
-let selector = (model: AppStore.model) => model.result;
+let selector = (model: AppModel.model) => model.data;
 
 [@react.component]
 let make = () => {
@@ -94,8 +100,8 @@ let make = () => {
   let result = AppStore.useSelector(selector);
 
   <div>
-    <button onClick={_event => dispatch(Click)}>
-      {ReasonReact.string("Click")}
+    <button onClick={_event => dispatch(FetchUsersRequest)}>
+      {React.string("Fetch users")}
     </button>
   </div>;
 };
