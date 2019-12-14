@@ -1,4 +1,4 @@
 ReactDOMRe.renderToElementWithId(
-  <AppStore.ElmishProvider> <Component1 /> </AppStore.ElmishProvider>,
-  "index1",
+  <AppStore.ElmishProvider> <Root /> </AppStore.ElmishProvider>,
+  "root",
 );

@@ -20,7 +20,7 @@ module type Config = {
   type message;
 
   let update: update(model, message);
-  let initialState: (model, option(effect(message)));
+  let initialModel: (model, option(effect(message)));
   let storeEnhancer:
     option(storeEnhancer(message, model) => storeEnhancer(message, model));
 };
@@ -34,7 +34,7 @@ module Make = (Config: Config) => {
 
   let effectManager = EffectManager.create();
 
-  let (initModel, initEffect) = Config.initialState;
+  let (initModel, initEffect) = Config.initialModel;
 
   let storeCreator =
     switch (Config.storeEnhancer) {
