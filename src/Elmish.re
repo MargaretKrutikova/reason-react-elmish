@@ -62,6 +62,8 @@ module Make = (Config: Config) => {
     newModel;
   };
 
+  let dispatch = Store.dispatch(modelStore);
+
   Store.replaceReducer(modelStore, customReducer);
 
   switch (initEffect) {
